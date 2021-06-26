@@ -1,0 +1,7 @@
+stuff/
+obj/
+bin/
+examples/obj
+exmaples/bin
+*.cbp
+*.layout
