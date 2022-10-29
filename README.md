@@ -49,14 +49,14 @@ Installation
 	* Run following command to download from github.
 
 ```sh
-curl -sL https://github.com/gavinlyonsrepo/TM1638plus_RPI/archive/1.0.tar.gz | tar xz
+curl -sL https://github.com/gavinlyonsrepo/TM1638plus_RPI/archive/1.9.tar.gz | tar xz
 ```
 
 4. Run "make" to run the makefile in base folder to install library, it will be
     installed to usr/lib and usr/include
 
 ```sh
-cd TM1638plus_RPI-1.0
+cd TM1638plus_RPI-1.9
 sudo make
 ```
 
