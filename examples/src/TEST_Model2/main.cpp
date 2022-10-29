@@ -49,8 +49,8 @@ int main(int argc, char **argv)
 	if(!bcm2835_init()) {return -1;}
 	
 	tm.displayBegin(); // Init the module
-	bcm2835_delay(myTestDelay2);
-
+	tm.DisplayStr("testing", 0);
+	bcm2835_delay(myTestDelay1);
 	tm.reset(); // Test 0 reset test
 	Test1();  // Test 1 decimal and float numbers
 	Test2();  // Test 2 Hexadecimal number
@@ -74,30 +74,41 @@ int main(int argc, char **argv)
 // ************** Function Space ***********
 void Test1(void)
 {
-	// Test 1 decimal numbers
-	tm.DisplayDecNum(250, 1 << 2, true); // 000002.50
+	// Test 1a decimal number right aligned
+	tm.DisplayDecNum(250, 1 << 2, TMAlignTextRight); // "     2.50"
 	bcm2835_delay(myTestDelay);
-	tm.DisplayDecNum(99991111, 1 << 4, true); // 9999.1111
+	// Test 1b decimal number left aligned
+	tm.DisplayDecNum(99791, 1 << 4, TMAlignTextLeft); // "9979.1   "
 	bcm2835_delay(myTestDelay);
-	tm.DisplayDecNum(2888, 0 , true);  // 00002888
+	// Test 1c decimal number leading zeros
+	tm.DisplayDecNum(2882, 0 , TMAlignTextZeros);  // 00002882
 	bcm2835_delay(myTestDelay);
-	tm.DisplayDecNum(331285, 1 <<4 ,false); // "3312.85   "
+	
+	// Test 1d negative number 
+	tm.DisplayDecNum(-33, 0 , TMAlignTextLeft); // "-33        "
 	bcm2835_delay(myTestDelay);
-	tm.DisplayDecNum(-33, 0 , false); // "-33        "
+	
+	// Test 1e  decimal numbers with the DisplayDecNumNibble right aligned
+	tm.DisplayDecNumNibble(213 , 78, 0 , TMAlignTextRight); // " 213  78"
 	bcm2835_delay(myTestDelay);
-	// Test 1b  decimal numbers with the DisplayDecNumNibble function divides display into two nibbles.
-	tm.DisplayDecNumNibble(2134 , 78, 1<<4 , true); // "2134.0078"
+	// Test 1f  decimal numbers with the DisplayDecNumNibble left aligned
+	tm.DisplayDecNumNibble(2 , 95, 1<<3 , TMAlignTextLeft); // "2   9.5  "
+	bcm2835_delay(myTestDelay);
+	// Test 1g  decimal numbers with the DisplayDecNumNibble leading zeros
+	tm.DisplayDecNumNibble(134 , 47, 1<<1 , TMAlignTextZeros); // "0134004.7"
 	bcm2835_delay(myTestDelay);
 }
 
 void Test2(void)
 {
-	// Test 2 Hexadecimal number
-	tm.DisplayHexNum(0x0000, 0x456E, 0x00, true); // 0000456E
+	// Test 2a Hexadecimal number right aligned
+	tm.DisplayHexNum(0x00FF, 0x056E, 0x00, TMAlignTextRight); //"  FF 56E"
 	bcm2835_delay(myTestDelay);
-	tm.DisplayHexNum(0xABCD, 0xEF23, 0x00, true); // ABCDEF23
+	// Test 2a Hexadecimal number left aligned
+	tm.DisplayHexNum(0x0ABC, 0x000F, 0x00, TMAlignTextLeft); // "ABC F   "
 	bcm2835_delay(myTestDelay);
-	tm.DisplayHexNum(0x0000, 0x00FF, 1 << 4); // 0000.00FF
+	// Test 2a Hexadecimal number leading zeros
+	tm.DisplayHexNum(0x0EE1, 0x00F4, 1 << 4, TMAlignTextZeros); // "0EE1.00F4"
 	bcm2835_delay(myTestDelay);
 }
 
@@ -138,7 +149,7 @@ void Test3(void)
 		dashvalue = (dashvalue*2)+1; // 1 to 256
 		bcm2835_delay(myTestDelay1);
 	}
-	bcm2835_delay(myTestDelay);
+	bcm2835_delay(myTestDelay1);
 
 }
 
@@ -220,7 +231,7 @@ void Test8(void)
 		// returns 0-16 , 0 for nothing pressed.
 		// NOTE: pressing  S16 will move to test 9 
 		buttons = tm.ReadKey16();
-		tm.DisplayDecNum(buttons, 0 ,false); 
+		tm.DisplayDecNum(buttons, 0 , TMAlignTextRight); 
 		bcm2835_delay( myTestDelay2);
 		if (buttons == 16)
 		{
@@ -250,11 +261,13 @@ void Test9(void)
 		// Can be used to detect multi key presses , see Notes section in readme.
 		// For issues related to display when pressing multi keys together. 
 		buttons = tm.ReadKey16Two();
-		tm.DisplayHexNum(0x0000, buttons, 0x00, true); // 0000456E
+		tm.DisplayHexNum(0x0000, buttons, 0x00, TMAlignTextZeros); 
 		if (buttons == 0x8000)
 		{
 			//pressing 16 to quit
 			bcm2835_delay( myTestDelay2);
+			tm.DisplayStr("quiting", 0);
+			bcm2835_delay( myTestDelay1);
 			return;
 		}
 		bcm2835_delay( myTestDelay2);

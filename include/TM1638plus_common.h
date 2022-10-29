@@ -37,6 +37,13 @@
 
 #define TM_Comm_Delay 1 // uS delay used in communications , User adjust 
 
+typedef enum 
+{
+	TMAlignTextRight = 1, 
+	TMAlignTextLeft = 2,  
+	TMAlignTextZeros = 3 // leading zeros
+}AlignTextType_e; // Alignment of text
+
 // font , map of ASCII values/table to 7-segment, offset to position 32. 
 const unsigned char SevenSeg[] = {
   0x00, /* (space) */

@@ -1,7 +1,8 @@
 /*
 	Project Name: TM1638
 	File: main.cpp
-	Description: demo file library for  TM1638 module(LED & KEY). Model 1
+	Description: demo file library for  TM1638 module(LED & KEY). Model 3 
+	bi-color leds green and red
 	Carries out series of tests demonstrating arduino library TM1638plus.
 	Author: Gavin Lyons.
 	Created June 2021
@@ -85,6 +86,7 @@ void Test0()
 {
 	// Test 0 reset test
 	tm.setLED(0, 1);
+	tm.displayText("testing");
 	bcm2835_delay(myTestDelay);
 	tm.reset();
 }
@@ -109,38 +111,48 @@ void Test2() {
 	tm.displayASCII(1, '3');
 	tm.displayASCII(2, '4');
 	tm.displayASCII(3, '1');
-	bcm2835_delay(myTestDelay);
+	bcm2835_delay(myTestDelay1);
 	tm.reset();
 }
 
 void Test3() {
-	//TEST 3 single segment (pos, (dp)gfedcba)
-	//In this case  segment g (middle dash) of digit position 7
-	tm.display7Seg(7, 0b01000000); // Displays "       -"
-	bcm2835_delay(myTestDelay);
+	//TEST 3 single segment (digit position, (dp)gfedcba)
+	// (dp)gfedcba =  seven segments positions
+	// Displays a single seg in (dp)gfedcba) in each pos 0-7
+	uint8_t pos = 0;
+	for (pos = 0 ; pos<8 ; pos++)
+	{
+		tm.display7Seg(pos, 1<<(7-pos)); 
+		bcm2835_delay(myTestDelay1);
+	}
 }
 
 void Test4() {
 	// Test 4 Hex digits.
-	tm.displayHex(0, 1);
-	tm.displayHex(1, 2);
-	tm.displayHex(2, 3);
-	tm.displayHex(3, 4);
-	tm.displayHex(4, 5);
-	tm.displayHex(5, 6);
-	tm.displayHex(6, 7);
-	tm.displayHex(7, 8);  
+	tm.displayHex(0, 0);
+	tm.displayHex(1, 1);
+	tm.displayHex(2, 2);
+	tm.displayHex(3, 3);
+	tm.displayHex(4, 4);
+	tm.displayHex(5, 5);
+	tm.displayHex(6, 6);
+	tm.displayHex(7, 7);  
 	bcm2835_delay(myTestDelay); // display 12345678
 
 	tm.displayHex(0, 8);
 	tm.displayHex(1, 9);
-	tm.displayHex(2, 10);
-	tm.displayHex(3, 11);
-	tm.displayHex(4, 12);
-	tm.displayHex(5, 13);
-	tm.displayHex(6, 14);
-	tm.displayHex(7, 15);
+	tm.displayHex(2, 0x0A);
+	tm.displayHex(3, 0x0B);
+	tm.displayHex(4, 0x0C);
+	tm.displayHex(5, 0x0D);
+	tm.displayHex(6, 0x0E);
+	tm.displayHex(7, 0x0F);
 	bcm2835_delay(myTestDelay); // display 89ABCDEF
+	tm.reset();
+	
+	tm.displayHex(1, 0xFE);
+	tm.displayHex(7, 0x10);
+	bcm2835_delay(myTestDelay);// display " E      0"
 }
 
 void Test5() {
@@ -164,18 +176,31 @@ void Test6() {
 }
 
 void Test7() {
-	// TEST 7a Integer
-	tm.displayIntNum(45, false); // "45      "
-	bcm2835_delay(myTestDelay);
-	// TEST 7b Integer
-	tm.displayIntNum(99991, true); // "00099991"
+	// TEST 7a Integer right aligned
+	tm.displayIntNum(45, TMAlignTextRight); // "        45"
 	bcm2835_delay(myTestDelay);
 	tm.reset();
-	// TEST 7b tm.DisplayDecNumNIbble
-	tm.DisplayDecNumNibble(1234, 5678, false); // "12345678"
+	// TEST 7b Integer left aligned 
+	tm.displayIntNum(798311, TMAlignTextLeft); // "798311  "
 	bcm2835_delay(myTestDelay);
-	tm.DisplayDecNumNibble(123, 662, true); // "01230662"
+	tm.reset();
+	// TEST 7c Integer // leading zeros
+	tm.displayIntNum(93391, TMAlignTextZeros); // "00093391"
 	bcm2835_delay(myTestDelay);
+
+	
+	// TEST 7d tm.DisplayDecNumNIbble right aligned
+	tm.DisplayDecNumNibble(134, 78, TMAlignTextRight); // " 134" 78"
+	bcm2835_delay(myTestDelay);
+	tm.reset();
+	// TEST 7e tm.DisplayDecNumNIbble left aligned
+	tm.DisplayDecNumNibble(123, 662, TMAlignTextLeft); // "123 662 "
+	bcm2835_delay(myTestDelay);
+	tm.reset();
+	// TEST 7f tm.DisplayDecNumNIbble leading zeros
+	tm.DisplayDecNumNibble(493, 62, TMAlignTextZeros); // "04930062"
+	bcm2835_delay(myTestDelay);
+	tm.reset();
 }
 
 void Test8() {
@@ -191,7 +216,7 @@ void Test9() {
 	// TEST 9 Text String + Float  SSSSFFFF ,  just one possible method.
 	float voltage = 12.45;
 	char workStr[11];
-	sprintf(workStr, "ADC=%f", voltage);
+	sprintf(workStr, "ADC=%.2f", voltage);
 	tm.displayText(workStr); // ADC=12.45
 	bcm2835_delay(myTestDelay);
 	tm.reset();
@@ -210,7 +235,7 @@ void Test11()
 {
 	//TEST11 user overflow
 	tm.displayText("1234567890abc"); //should display just 12345678
-	bcm2835_delay(myTestDelay);
+	bcm2835_delay(myTestDelay1);
 	tm.reset();
 }
 
@@ -291,7 +316,7 @@ void Test14() {
 	// NOTE: Press S1 & S8 together to quit
 	tm.displayText("buttons ");
 	bcm2835_delay(2000);
-	while (1) // Loop here forever
+	while (1) // Loop here until user quits 
 	{
 		uint8_t buttons = tm.readButtons();
 			/* buttons contains a byte with values of button s8s7s6s5s4s3s2s1
@@ -306,10 +331,13 @@ void Test14() {
 			 0x80 : S8 Pressed  1000 0000  
 			*/
 		doLEDs(buttons);
-		tm.displayIntNum(buttons, true); 
+		tm.displayIntNum(buttons, TMAlignTextRight); 
 		bcm2835_delay(250); 
 		if (buttons == 129) break; // if Press S1 & S8 together =  quit loop
 	}
+	tm.reset();
+	tm.displayText("end test");
+	bcm2835_delay(2000); 
 }
 
 // scans the individual bits of value sets a LED based on which button pressed
@@ -321,8 +349,7 @@ void doLEDs(uint8_t value) {
 }
 
 //This returns milli-seconds as a 64-bit unsigned number, monotonically increasing, 
-//probably since system boot.
-//The actual resolution looks like microseconds. 
+//since system boot. 
 static uint64_t RPI_Millis( void )
 {
   struct timespec now;

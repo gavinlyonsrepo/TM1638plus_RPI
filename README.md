@@ -11,7 +11,6 @@ Table of contents
   * [Model Two](#model-two)
   * [Model Three](#model-three)
   * [Notes](#notes)
-  * [Ports](#ports)
 
 Overview
 --------------------------------------------
@@ -21,7 +20,7 @@ Overview
 * Description:
 A Raspberry pi library to display data on a 8-digit TM1638 seven segment module.
 Dynamic install-able system level Raspberry Pi C++ library.
-Based on my arduino library called "TM1638plus".
+
 This library supports 3 different models, pictured above from left to right.
 
 1. Model 1, The (8 KEY & 8 LED) variant which has 8 LED's and 8 Push buttons.
@@ -34,6 +33,9 @@ This library supports 3 different models, pictured above from left to right.
 	3. Raspbian 9.13 stretch OS
 	4. bcm2835 Library 1.68 (Dependency: used for GPIO control and delays)
 
+* Based on my arduino library called "TM1638plus".
+	1. The references in Readme notes section refer here.
+	2. [ Link ](https://github.com/gavinlyonsrepo/TM1638plus)
 
 Installation
 ------------------------------
@@ -140,8 +142,8 @@ For more information see the commented headers in header file.
 1. Print an ASCII character.
 2. Print an ASCII character with a dot/decimal point.
 3. Print a Hexadecimal digit(0-15).
-4. Print a long integer number with or without leading zeros.
-5. Print two integer numbers (0-9999) to each nibble with or without leading zeros.
+4. Print a long integer number with or without leading zeros, and text alignment.
+5. Print two integer numbers (0-9999) to each nibble with or without leading zeros and text alignment.
 6. Print a text string(dots are replaced and dot is turned on preceding digit),
 "abc.def" becomes "abcdef" with c decimal point segment switched on.
 7. Read buttons status. User may have to debounce buttons depending on application.
@@ -176,10 +178,10 @@ The commented functions can be found in library header file TM1638plus_Model2.h.
 The library support Strings,decimal ,Hex ,raw ASCII data, setting individual segments,
 and the decimal point. For more detailed information on functions see commented headers in header file(.h). Press S16 in test file to go from test8 to test9 and in test9 to quit.
 
-1. Print a Hexadecimal number with or without leading zeros
-2. Print a decimal number with or without leading zeros
+1. Print a Hexadecimal number with or without leading zeros, and text alignment.
+2. Print a decimal number with or without leading zeros, and text alignment.
 3. Manually set segments to create custom patterns.
-4. Print two 4 digit decimal number(0-9999) to each nibble with or without leading zeros.
+4. Print two 4 digit decimal number(0-9999) to each nibble with or without leading zeros, and text alignment.
 5. Print a text string, dot function supported.
 6. Read buttons status. User may want to debounce buttons depending on application.
 Two different functions to read buttons.
@@ -263,16 +265,3 @@ However due to the wiring  of the module, see SG-X lines  on schematic,
 Pressing Certain combinations of buttons will cause the  data on Seven Segments to
 change. So the simultaneous use of multiple key presses and the seven segments display
 is problematic and limited. See issue 12 on github(arduino lib)  for more details.
-
-
-Ports
--------------------
-
-My Original Arduino Library the references in Readme notes section refer here.
-[ Link ](https://github.com/gavinlyonsrepo/TM1638plus)
-
-MicroChip PIC XC8 port.
-[ Link ](https://github.com/gavinlyonsrepo/pic_16F18446_projects)
-
-Stm32cubeIDE STM32F303k8T6  C++
-[Link](https://github.com/gavinlyonsrepo/STM32_projects)

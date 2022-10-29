@@ -18,10 +18,10 @@ void TM1638plus_Model2::DisplaySegments(uint8_t segment, uint8_t digit)
 {
 	 if (_SWAP_NIBBLES == true)
 	 {
-			uint8_t upper , lower = 0;
-			lower = (digit) & 0x0F;  // select lower nibble
-			upper =  (digit >> 4) & 0X0F; //select upper nibble
-			digit = lower << 4 | upper;
+		uint8_t upper , lower = 0;
+		lower = (digit) & 0x0F;  // select lower nibble
+		upper =  (digit >> 4) & 0X0F; //select upper nibble
+		digit = lower << 4 | upper;
 	 }
 
 	segment = (segment<<1);
@@ -33,29 +33,65 @@ void TM1638plus_Model2::DisplaySegments(uint8_t segment, uint8_t digit)
 }
 
 
-void TM1638plus_Model2::DisplayHexNum(uint16_t  numberUpper, uint16_t numberLower, uint8_t dots, bool leadingZeros)
+void TM1638plus_Model2::DisplayHexNum(uint16_t  numberUpper, uint16_t numberLower, uint8_t dots, AlignTextType_e TextAlignment)
 {
 	char valuesUpper[TM_DISPLAY_SIZE + 1];
 	char valuesLower[TM_DISPLAY_SIZE/2 + 1];
-	snprintf(valuesUpper, TM_DISPLAY_SIZE/2 + 1, leadingZeros ? "%04X" : "%X", numberUpper);
-	snprintf(valuesLower, TM_DISPLAY_SIZE/2 + 1, leadingZeros ? "%04X" : "%X", numberLower); 
+	char TextDisplay[5] = "%";
+	char TextRight[3] = "4X";
+	char TextLeft[4] = "-4X";
+	char TextLeadZero[4] = "04X";
+	
+	switch(TextAlignment) 
+	{
+		case TMAlignTextRight: strcat(TextDisplay ,TextRight); break; // %4X
+		case TMAlignTextLeft: strcat(TextDisplay ,TextLeft); break;  // %-4X
+		case TMAlignTextZeros: strcat(TextDisplay ,TextLeadZero); break; // %04X
+	}
+	
+	snprintf(valuesUpper, TM_DISPLAY_SIZE/2 + 1, TextDisplay, numberUpper);
+	snprintf(valuesLower, TM_DISPLAY_SIZE/2 + 1, TextDisplay, numberLower); 
 	strcat(valuesUpper ,valuesLower);
 	DisplayStr(valuesUpper, dots);
+	
 }
 
-void TM1638plus_Model2::DisplayDecNum(unsigned long number, uint8_t dots, bool leadingZeros)
+void TM1638plus_Model2::DisplayDecNum(unsigned long number, uint8_t dots, AlignTextType_e TextAlignment)
 {
 	char values[TM_DISPLAY_SIZE + 1];
-	snprintf(values, TM_DISPLAY_SIZE + 1, leadingZeros ? "%08ld" : "%ld", number); 
+	char TextDisplay[6] = "%";
+	char TextRight[4] = "8ld";
+	char TextLeft[3] = "ld";
+	char TextLeadZero[5] = "08ld";
+	
+	switch(TextAlignment) 
+	{
+		case TMAlignTextRight: strcat(TextDisplay ,TextRight); break; // %8ld
+		case TMAlignTextLeft: strcat(TextDisplay ,TextLeft); break;  // %ld
+		case TMAlignTextZeros: strcat(TextDisplay ,TextLeadZero); break; // %08ld
+	}
+	snprintf(values, TM_DISPLAY_SIZE + 1, TextDisplay, number); 
 	DisplayStr(values, dots);
 }
 
-void TM1638plus_Model2::DisplayDecNumNibble(uint16_t  numberUpper, uint16_t numberLower, uint8_t dots, bool leadingZeros)
-{
+void TM1638plus_Model2::DisplayDecNumNibble(uint16_t  numberUpper, uint16_t numberLower, uint8_t dots, AlignTextType_e TextAlignment){
+	
 	char valuesUpper[TM_DISPLAY_SIZE + 1];
 	char valuesLower[TM_DISPLAY_SIZE/2 + 1];
-	snprintf(valuesUpper, TM_DISPLAY_SIZE/2 + 1, leadingZeros ? "%04d" : "%d", numberUpper);
-	snprintf(valuesLower, TM_DISPLAY_SIZE/2 + 1, leadingZeros ? "%04d" : "%d", numberLower); 
+	char TextDisplay[5] = "%";
+	char TextRight[3] = "4d";
+	char TextLeft[4] = "-4d";
+	char TextLeadZero[4] = "04d";
+	
+	switch(TextAlignment) 
+	{
+		case TMAlignTextRight: strcat(TextDisplay ,TextRight); break; // %4d
+		case TMAlignTextLeft: strcat(TextDisplay ,TextLeft); break;  // %-4d
+		case TMAlignTextZeros: strcat(TextDisplay ,TextLeadZero); break; // %04d
+	}
+	
+	snprintf(valuesUpper, TM_DISPLAY_SIZE/2 + 1, TextDisplay, numberUpper);
+	snprintf(valuesLower, TM_DISPLAY_SIZE/2 + 1, TextDisplay, numberLower); 
 	strcat(valuesUpper ,valuesLower);
 	DisplayStr(valuesUpper, dots);
 }

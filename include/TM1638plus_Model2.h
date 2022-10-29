@@ -53,14 +53,19 @@ public:
 	// to set all segment "g" off (0x06,0X00)
 	void DisplaySegments(uint8_t segment, uint8_t segmentValue);
 	
-	// Display a Hexadecimal number ,takes a number and uint8_t for decimal point display, leading zeros optional
-	// converts to string. 
-	//void DisplayHexNum(unsigned long number, uint8_t dots, bool leadingZeros = true);
-	void DisplayHexNum(uint16_t  numberUpper, uint16_t numberLower, uint8_t dots, bool leadingZeros = true);
+	// Display a Hexadecimal number 
+	// converts to string internally
+	// Param 1 :: upper nibble integer 2^16 0-0xFFFF
+	// Param 2 :: lower nibble integer 2^16 0-0xFFFF
+	// Param 3 :: Dots bytes 1 here will switch on dot segment in that position
+	// Param 4 :: enum text alignment , left or right alignment or leading zeros
+	void DisplayHexNum(uint16_t  numberUpper, uint16_t numberLower, uint8_t dots,  AlignTextType_e = TMAlignTextLeft);
 	
-	// Display a decimal number , takes a number and uint8_t for decimal point display,  leading zeros optional 
-	// converts to string. 
-	void DisplayDecNum(unsigned long number, uint8_t dots, bool leadingZeros = true);
+	// Display an integer and leading zeros optional
+	// Param 1 :: integer to display 2^32 
+	// Param 2 :: Dots bytes 1 here will switch on dot segment in that position
+	// Param 3 :: enum text alignment , left or right alignment or leading zeros
+	void DisplayDecNum(unsigned long number, uint8_t dots,  AlignTextType_e = TMAlignTextLeft);
 
 	// Display a string , takes a string and uint8_t for decimal point display
 	// Takes in string , converts it to ASCII using the font and masks for the decimal point
@@ -77,10 +82,13 @@ public:
 	// see for mapping of seven segment to digit https://en.wikipedia.org/wiki/Seven-segment_display
 	void ASCIItoSegment(const uint8_t values[]);
 	
-	//Divides the display into two nibbles and displays a Decimal number in each.
-	//takes in two numbers 0-9999 for each nibble ,  and uint8_t for decimal point display,
-	//and leading zeros optional
-	void DisplayDecNumNibble(uint16_t numberUpper, uint16_t numberLower, uint8_t dots, bool leadingZeros = true);
+	// Display a Hexadecimal number 
+	// converts to string internally
+	// Param 1 :: upper nibble integer 2^16 0-9999
+	// Param 2 :: lower nibble integer 2^16 0-9999
+	// Param 3 :: Dots bytes 1 here will switch on dot segment in that position
+	// Param 4 :: enum text alignment , left or right alignment or leading zeros
+	void DisplayDecNumNibble(uint16_t numberUpper, uint16_t numberLower, uint8_t dots,  AlignTextType_e = TMAlignTextLeft);
 	
 	
 private:
