@@ -1,13 +1,13 @@
-/*
-  Project Name: TM1638plus_RPI 
-  File: main.cpp
-  Description: A Basic test file for model 2, TM1638 module(16 KEY 16 pushbuttons).
-  Author: Gavin Lyons.
-  Created June 20221
-  URL: https://github.com/gavinlyonsrepo/TM1638plus_RPI
+/*!
+    @file TM1638plus_RPI/examples/src/HELLOWORLD_Model2/main.cpp
+    @author Gavin Lyons
+    @brief A demo file library for TM1638 module Works on Model 2 
+    Carries out series most basic test , "hello world" helo wrld
+    Project Name: TM1638plus_RPI
+    URL: https://github.com/gavinlyonsrepo/TM1638plus_RPI
 */
 
-#include <TM1638plus_Model2.h>
+#include <TM1638plus_Model2.hpp>
 #include <bcm2835.h>
 #include <stdio.h>
 
@@ -23,7 +23,7 @@ TM1638plus_Model2 tm(STROBE_TM, CLOCK_TM , DIO_TM, swap_nibbles);
 
 int main(int argc, char **argv) 
 {
-	printf("Test Begin\r\n");
+	printf("Test Begin :: Model 2 :: TM1638plus_RPI\r\n");
 	if(!bcm2835_init()) {return -1;}
 	
 	tm.displayBegin();

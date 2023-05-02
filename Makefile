@@ -61,9 +61,8 @@ install:
 	@echo
 	@echo "[INSTALL HEADERS]"
 	@if ( test ! -d $(PREFIX)/include ) ; then mkdir -p $(PREFIX)/include ; fi
-	@cp -vf  include/TM1638plus.h $(PREFIX)/include
-	@cp -vf  include/TM1638plus_common.h $(PREFIX)/include
-	@cp -vf  include/TM1638plus_Model2.h $(PREFIX)/include
+	@cp -vf  include/*.hpp $(PREFIX)/include
+
 	@echo "[DONE!]"
 
 # Uninstall the library
@@ -73,9 +72,10 @@ uninstall:
 	@rm -vf ${LIBDIR}/${LIB}.*
 
 	@echo "[UNINSTALL HEADERS]"
-	@rm -rvf  $(PREFIX)/include/TM1638plus.h
-	@rm -rvf  $(PREFIX)/include/TM1638plus_common.h 
-	@rm -rvf  $(PREFIX)/include/TM1638plus_Model2.h
+	@rm -rvf  $(PREFIX)/include/TM1638plus_Model1.hpp
+	@rm -rvf  $(PREFIX)/include/TM1638plus_Model2.hpp
+	@rm -rvf  $(PREFIX)/include/TM1638plus_Model3.hpp
+	@rm -rvf  $(PREFIX)/include/TM1638plus_common.hpp
 	@echo "[DONE!]"
 
 # clear build files

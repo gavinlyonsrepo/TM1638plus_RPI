@@ -1,13 +1,13 @@
 /*!
-	@file TM1638plus_RPI/examples/src/HELLOWORLD_Model1/main.cpp
+	@file TM1638plus_RPI/examples/src/HELLOWORLD_Model3/main.cpp
 	@author Gavin Lyons
-	@brief A demo file library for TM1638 module(LED & KEY). Works on Model 1 a
+	@brief A demo file library for TM1638 module Works on Model 3
 	Carries out series most basic test , "hello world" helo wrld
 	Project Name: TM1638plus_RPI
 	URL: https://github.com/gavinlyonsrepo/TM1638plus_RPI
 */
 
-#include <TM1638plus_Model1.hpp> //include the library
+#include <TM1638plus_Model3.hpp> //include the library
 #include <bcm2835.h>
 #include <stdio.h>
 
@@ -18,12 +18,12 @@
 #define  DIO_TM 25 // data = GPIO connected to data line of module
  
 // Constructor object (GPIO STB , GPIO CLOCK , GPIO DIO, )
-TM1638plus_Model1 tm(STROBE_TM, CLOCK_TM , DIO_TM);
+TM1638plus_Model3 tm(STROBE_TM, CLOCK_TM , DIO_TM);
 
 
 int main(int argc, char **argv) 
 {
-	printf("Test Begin :: Model 1 :: TM1638plus_RPI\r\n");
+	printf("Test Begin\r\n");
 	if(!bcm2835_init()) {return -1;}
 	
 	tm.displayBegin(); 

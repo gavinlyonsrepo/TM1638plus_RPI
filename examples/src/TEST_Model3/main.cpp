@@ -1,20 +1,33 @@
-/*
-	Project Name: TM1638
-	File: main.cpp
-	Description: demo file library for  TM1638 module(LED & KEY). Model 3 
-	bi-color leds green and red
+/*!
+	@file TM1638plus_RPI/examples/src/TEST_Model3/main.cpp
+	@author Gavin Lyons
+	@brief A demo file library for TM1638 module Works on Model 3 
 	Carries out series of tests demonstrating arduino library TM1638plus.
-	Author: Gavin Lyons.
-	Created June 2021
+	bi-color leds green and red
+	Project Name: TM1638plus_RPI
 	URL: https://github.com/gavinlyonsrepo/TM1638plus_RPI
-	* 
-	* NOTE: in last Test, Test14 buttons test , Press S1 & S8 together to quit
+	@note
+		 -# Test0 =    reset
+		 -# Test1 =    Brightness
+		 -# Test2 =    ASCII display
+		 -# Test3 =    Set a single segment
+		 -# Test4 =    Hex digits
+		 -# Test5 =    Text String with Decimal point
+		 -# Test6 =    TEXT + ASCII combo
+		 -# Test7 =    Integer Decimal number
+		 -# Test8 =    Text String + Float hack
+		 -# Test9 =    Text String + decimal number
+		 -# Test10 =    Multiple Decimal points
+		 -# Test11 =    Display Overflow
+		 -# Test12 =    Scrolling text
+		 -# Test13 =    setLED and setLEDs
+		 -# Test14 =    Buttons + LEDS NOTE: Press S1 & S8 together to quit
 */
 
 #include <bcm2835.h>
 #include <stdio.h>
 #include <time.h>
-#include <TM1638plus.h>
+#include <TM1638plus_Model3.hpp>
 
 // GPIO I/O pins on the Arduino connected to strobe, clock, data,
 //pick on any I/O you want.
@@ -24,7 +37,7 @@
 
 
 //Constructor object (GPIO STB , GPIO CLOCK , GPIO DIO)
-TM1638plus tm(STROBE_TM, CLOCK_TM , DIO_TM);
+TM1638plus_Model3 tm(STROBE_TM, CLOCK_TM , DIO_TM);
 
 
 // Some vars and defines for the tests.
@@ -54,7 +67,7 @@ static uint64_t RPI_Millis( void );
 int main(int argc, char **argv) 
 {
 
-	printf("Test Begin\r\n");
+	printf("Test Begin :: Model 3 :: TM1638plus_RPI\r\n");
 	if(!bcm2835_init()) {return -1;}
 	
 	tm.displayBegin();
@@ -85,6 +98,7 @@ int main(int argc, char **argv)
 void Test0()
 {
 	// Test 0 reset test
+	printf("Test 0: Reset\r\n");
 	tm.setLED(0, 1);
 	tm.displayText("testing");
 	bcm2835_delay(myTestDelay);
@@ -93,6 +107,7 @@ void Test0()
 
 void Test1() {
 	// Test 1  Brightness and reset
+	printf("Test 1: Brightness \r\n");
 	for (uint8_t brightness = 0; brightness < 8; brightness++)
 	{
 		tm.brightness(brightness);
@@ -106,7 +121,7 @@ void Test1() {
 
 void Test2() {
 	//Test 2 ASCII , display 2.341
-
+	printf("Test 2: ASCII\r\n");
 	tm.displayASCIIwDot(0, '2');
 	tm.displayASCII(1, '3');
 	tm.displayASCII(2, '4');
@@ -119,6 +134,7 @@ void Test3() {
 	//TEST 3 single segment (digit position, (dp)gfedcba)
 	// (dp)gfedcba =  seven segments positions
 	// Displays a single seg in (dp)gfedcba) in each pos 0-7
+	printf("Test 3: Set a single segment\r\n");
 	uint8_t pos = 0;
 	for (pos = 0 ; pos<8 ; pos++)
 	{
@@ -129,6 +145,7 @@ void Test3() {
 
 void Test4() {
 	// Test 4 Hex digits.
+	printf("Test 4: Hexadecimal\r\n");
 	tm.displayHex(0, 0);
 	tm.displayHex(1, 1);
 	tm.displayHex(2, 2);
@@ -158,6 +175,7 @@ void Test4() {
 void Test5() {
 	// Test 5 TEXT  with dec point
 	// abcdefgh with decimal point for c and d
+	printf("Test 5: Text String with Decimal point\r\n");
 	tm.displayText("abc.d.efgh");
 	bcm2835_delay(myTestDelay);
 }
@@ -165,6 +183,7 @@ void Test5() {
 void Test6() {
 	// Test6  TEXT + ASCII combo
 	// ADC=.2.948
+	printf("Test 6: TEXT + ASCII combo\r\n");
 	char text1[] = "ADC=.";
 	tm.displayText(text1);
 	tm.displayASCIIwDot(4, '2');
@@ -176,35 +195,37 @@ void Test6() {
 }
 
 void Test7() {
+	printf("Test 7: Integer\r\n");
 	// TEST 7a Integer right aligned
-	tm.displayIntNum(45, TMAlignTextRight); // "        45"
+	tm.displayIntNum(45, tm.TMAlignTextRight); // "        45"
 	bcm2835_delay(myTestDelay);
 	tm.reset();
 	// TEST 7b Integer left aligned 
-	tm.displayIntNum(798311, TMAlignTextLeft); // "798311  "
+	tm.displayIntNum(798311, tm.TMAlignTextLeft); // "798311  "
 	bcm2835_delay(myTestDelay);
 	tm.reset();
 	// TEST 7c Integer // leading zeros
-	tm.displayIntNum(93391, TMAlignTextZeros); // "00093391"
+	tm.displayIntNum(93391, tm.TMAlignTextZeros); // "00093391"
 	bcm2835_delay(myTestDelay);
 
 	
 	// TEST 7d tm.DisplayDecNumNIbble right aligned
-	tm.DisplayDecNumNibble(134, 78, TMAlignTextRight); // " 134" 78"
+	tm.DisplayDecNumNibble(134, 78, tm.TMAlignTextRight); // " 134" 78"
 	bcm2835_delay(myTestDelay);
 	tm.reset();
 	// TEST 7e tm.DisplayDecNumNIbble left aligned
-	tm.DisplayDecNumNibble(123, 662, TMAlignTextLeft); // "123 662 "
+	tm.DisplayDecNumNibble(123, 662, tm.TMAlignTextLeft); // "123 662 "
 	bcm2835_delay(myTestDelay);
 	tm.reset();
 	// TEST 7f tm.DisplayDecNumNIbble leading zeros
-	tm.DisplayDecNumNibble(493, 62, TMAlignTextZeros); // "04930062"
+	tm.DisplayDecNumNibble(493, 62, tm.TMAlignTextZeros); // "04930062"
 	bcm2835_delay(myTestDelay);
 	tm.reset();
 }
 
 void Test8() {
 	// TEST 8  TEXT STRING + integer SSSSIIII
+	printf("Test 8: TEXT STRING + integer\r\n");
 	char workStr[11];
 	uint16_t  data = 234;
 	sprintf(workStr, "ADC=.%04d", data); // "ADC=.0234"
@@ -214,6 +235,7 @@ void Test8() {
 
 void Test9() {
 	// TEST 9 Text String + Float  SSSSFFFF ,  just one possible method.
+	printf("Test 9: Text String + Float \r\n");
 	float voltage = 12.45;
 	char workStr[11];
 	sprintf(workStr, "ADC=%.2f", voltage);
@@ -225,6 +247,7 @@ void Test9() {
 void Test10()
 {
 	//TEST 10 Multiple dots test
+	printf("Test 10: Multiple dots test \r\n");
 	tm.displayText("Hello...");
 	bcm2835_delay(myTestDelay);
 	tm.displayText("...---..."); //SOS in morse
@@ -234,6 +257,7 @@ void Test10()
 void Test11()
 {
 	//TEST11 user overflow
+	printf("Test 11: overflow test \r\n");
 	tm.displayText("1234567890abc"); //should display just 12345678
 	bcm2835_delay(myTestDelay1);
 	tm.reset();
@@ -242,6 +266,7 @@ void Test11()
 
 void Test12() {
 	//TEST 12 scrolling text, just one possible method.
+	printf("Test 12: Scroll test  \r\n");
 	char textScroll[17] = " Hello world 123";
 	unsigned long previousMillis_display = 0;  // will store last time display was updated
 	const long interval_display = 1000;  //   interval at which to update display (milliseconds)
@@ -269,44 +294,44 @@ void Test12() {
 
 void Test13()
 {
-  //Test 13 LED display
-  uint8_t LEDposition = 0;
-
-  // Test 13A Turn on green leds with setLED
-  for (LEDposition = 0; LEDposition < 8; LEDposition++) {
-    tm.setLED(LEDposition, TM_GREEN_LED);
-    delay(500);
-    tm.setLED(LEDposition, TM_OFF_LED);
+	 //Test 13 LED display
+	 uint8_t LEDposition = 0;
+	printf("Test 13: LED \r\n");
+	 // Test 13A Turn on green leds with setLED
+	 for (LEDposition = 0; LEDposition < 8; LEDposition++) {
+	tm.setLED(LEDposition, tm.TM_GREEN_LED);
+	delay(500);
+	tm.setLED(LEDposition, tm.TM_OFF_LED);
   }
 
-  // Test 13b turn on red LEDs with setLED
-  for (LEDposition = 0; LEDposition < 8; LEDposition++) {
-    tm.setLED(LEDposition, TM_RED_LED);
-    delay(500);
-    tm.setLED(LEDposition, TM_OFF_LED);
+	 // Test 13b turn on red LEDs with setLED
+	 for (LEDposition = 0; LEDposition < 8; LEDposition++) {
+	tm.setLED(LEDposition, tm.TM_RED_LED);
+	delay(500);
+	tm.setLED(LEDposition, tm.TM_OFF_LED);
   }
 
   // TEST 13c 
   // test setLEDs function (0xgreenred) (0xGGRR) (LED8-LED1, LED8-LED1)
   // Upper byte switch LED green colour ON, lower byte = switch LED red colour ON
-  // NB Note on the unit, LED8 is onthe right hand side so result is mirrored.
+  // NB Note on the unit, LED8 is on the right hand side so result is mirrored.
   // Example:
-  // E0 = green on 07 = red on 
+  // E0 = green on , 07 = red on 
   // E0  = 1110 0000 , 07 = 0000 0111 = 11100111 = GGGXXRRR = LED8-LED1
   // Shows on display as  LED1-LED8 turns on RRRXXGGG as LED 8 is on right hand side.
    
-  tm.setLEDs(0xE007); //L1-L8 turns on RRRXXGGG on display
+  tm.setLEDs(0xE007); //L1-L8 turns on RRRX XGGG on display
   delay(3000);
   
-  tm.setLEDs(0xF00F); // L1-L8 turns on RRRRGGGG on display
+  tm.setLEDs(0xF00F); // L1-L8 turns on RRRR GGGG on display
   delay(3000);
-  tm.setLEDs(0xFE01); // L1-L8 turns on RGGGGGGG on display
+  tm.setLEDs(0xFE01); // L1-L8 turns on RGGG GGGG on display
   delay(3000);
-  tm.setLEDs(0x00FF); //all red   RRRRRRR
+  tm.setLEDs(0x00FF); //all red   RRRR RRRR
   delay(3000);
-  tm.setLEDs(0xFF00); //all green GGGGGGG
+  tm.setLEDs(0xFF00); //all green GGGG GGGG
   delay(3000);
-  tm.setLEDs(0x0000); //all off
+  tm.setLEDs(0x0000); //all off   XXXX XXXX
   delay(3000);
 
 }
@@ -314,6 +339,7 @@ void Test13()
 void Test14() {
 	//Test 14 buttons and LED test, press switch number S-X to turn on LED-X, where x is 1-8.
 	// NOTE: Press S1 & S8 together to quit
+	printf("Test 14: Buttons :: Press S1 & S8 together to quit\r\n");
 	tm.displayText("buttons ");
 	bcm2835_delay(2000);
 	while (1) // Loop here until user quits 
@@ -331,7 +357,7 @@ void Test14() {
 			 0x80 : S8 Pressed  1000 0000  
 			*/
 		doLEDs(buttons);
-		tm.displayIntNum(buttons, TMAlignTextRight); 
+		tm.displayIntNum(buttons, tm.TMAlignTextRight); 
 		bcm2835_delay(250); 
 		if (buttons == 129) break; // if Press S1 & S8 together =  quit loop
 	}

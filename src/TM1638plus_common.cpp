@@ -1,15 +1,18 @@
-/*
-* Project Name: TM1638plus_RPI
-* File: TM1638plus_common
-* Description: cpp  file for common data and functions between model 1 and 2 classes
-* Raspberry pi library T
-* Author: Gavin Lyons.
-* URL: https://github.com/gavinlyonsrepo/TM1638plus_RPI
+/*!
+	@file     TM1638plus_common.cpp
+	@author   Gavin Lyons
+	@brief    RPI library Tm1638plus, source file for common data and functions between model classes. 
+	@note  See URL for full details. https://github.com/gavinlyonsrepo/TM1638plus_RPI
 */
 
-#include "TM1638plus_common.h"
+#include "TM1638plus_common.hpp"
 
-
+/*!
+	@brief Constructor for class TM1638plus_common
+	@param strobe STB pin
+	@param clock CLk pin
+	@param data DIO pin 
+*/
 TM1638plus_common::TM1638plus_common(uint8_t strobe, uint8_t clock, uint8_t data)
 {
 	_STROBE_IO = strobe;
@@ -17,6 +20,10 @@ TM1638plus_common::TM1638plus_common(uint8_t strobe, uint8_t clock, uint8_t data
 	_CLOCK_IO = clock;
 }
 
+/*!
+	@brief Reset / clear the display
+	@note The display is cleared by writing zero to all data segment  addresses.
+*/
 void TM1638plus_common::reset() {
 	sendCommand(TM_WRITE_INC); // set auto increment mode
 	bcm2835_gpio_write(_STROBE_IO, LOW);
@@ -28,6 +35,10 @@ void TM1638plus_common::reset() {
 	bcm2835_gpio_write(_STROBE_IO, HIGH);
 }
 
+/*!
+	@brief  Sets the brightness level of segments in display on a scale of brightness
+	@param brightness byte with value 0 to 7 The DEFAULT_BRIGHTNESS = 0x02
+*/
 void TM1638plus_common::brightness(uint8_t brightness)
 {
 	uint8_t  value = 0;
@@ -35,16 +46,24 @@ void TM1638plus_common::brightness(uint8_t brightness)
 	sendCommand(value);
 }
 
+/*!
+	@brief Begin method , sets pin modes and activate display.
+	@note Call in Setup
+*/
 void TM1638plus_common::displayBegin(void)
 {
 	bcm2835_gpio_fsel( _STROBE_IO, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(_DATA_IO, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(_CLOCK_IO, BCM2835_GPIO_FSEL_OUTP);
 	sendCommand(TM_ACTIVATE);
-	brightness(TM_DEFAULT_BRIGHTNESS);
+	brightness(_TMDefaultBrightness);
 	reset();
 }
 
+/*!
+	@brief Send command to display
+	@param value command byte to send
+*/
 void TM1638plus_common::sendCommand(uint8_t value)
 {
 	bcm2835_gpio_write(_STROBE_IO, LOW);
@@ -52,12 +71,23 @@ void TM1638plus_common::sendCommand(uint8_t value)
 	bcm2835_gpio_write(_STROBE_IO, HIGH);
 }
 
+/*!
+	@brief Send Data to display
+	@param data  Data byte to send
+*/
 void TM1638plus_common::sendData(uint8_t data)
 {
 	HighFreqshiftOut(_DATA_IO, _CLOCK_IO, data);
 }
 
 
+/*!
+	@brief Shifts in a byte of data from the Tm1638 SPI-like bus
+	@param dataPin Tm1638 Data GPIO
+	@param clockPin Tm1638 Clock GPIO
+	@return  Data byte
+	@note _TMCommDelay microsecond delay may have to be adjusted depending on processor
+*/
 uint8_t  TM1638plus_common::HighFreqshiftin(uint8_t dataPin, uint8_t clockPin) 
 {
 	uint8_t value = 0;
@@ -67,13 +97,20 @@ uint8_t  TM1638plus_common::HighFreqshiftin(uint8_t dataPin, uint8_t clockPin)
 	{
 		value |= bcm2835_gpio_lev(dataPin) << i;
 		bcm2835_gpio_write(clockPin, HIGH);
-		bcm2835_delayMicroseconds(TM_Comm_Delay);
+		bcm2835_delayMicroseconds(_TMCommDelay);
 		bcm2835_gpio_write(clockPin, LOW);
-		bcm2835_delayMicroseconds(TM_Comm_Delay);
+		bcm2835_delayMicroseconds(_TMCommDelay);
 	}
 	return value;
 }
 
+ /*!
+	@brief Shifts out a byte of data on to the Tm1638 SPI-like bus
+	@param dataPin Tm1638 Data GPIO
+	@param clockPin Tm1638 Clock GPIO
+	@param val The byte of data to shift out 
+	@note _TMCommDelay microsecond delay may have to be adjusted depending on processor
+*/
 void TM1638plus_common::HighFreqshiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t val)
 {
 	uint8_t i;
@@ -82,8 +119,9 @@ void TM1638plus_common::HighFreqshiftOut(uint8_t dataPin, uint8_t clockPin, uint
 	{
 		bcm2835_gpio_write(dataPin, !!(val & (1 << i)));
 		bcm2835_gpio_write(clockPin, HIGH);
-		bcm2835_delayMicroseconds(TM_Comm_Delay);
+		bcm2835_delayMicroseconds(_TMCommDelay);
 		bcm2835_gpio_write (clockPin, LOW);
-		bcm2835_delayMicroseconds(TM_Comm_Delay);
+		bcm2835_delayMicroseconds(_TMCommDelay);
 	}
 }
+

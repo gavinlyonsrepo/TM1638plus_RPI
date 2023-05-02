@@ -3,16 +3,23 @@
 # URL: https://github.com/gavinlyonsrepo/TM1638plus_RPI
 
 # ************************************************
+
+# **************************************
+# Options
+# 1. make  
+# 2. make clean
+# 3. make run (note :: wraps sudo)
+# **************************************
+
 # **** User SRC directory Option Section *********
 # pick on example "SRC" dir and ONE ONLY.
 # Comment out the others. 
-
 SRC=src/HELLOWORLD_Model1
 #SRC=src/HELLOWORLD_Model2
+#SRC=src/HELLOWORLD_Model3
 #SRC=src/TEST_Model1
 #SRC=src/TEST_Model2
 #SRC=src/TEST_Model3
-
 # ************************************************
 
 
@@ -27,6 +34,9 @@ BIN=./bin
 TARGET=$(BIN)/test
 
 all: clean pre-build $(TARGET) 
+
+run:
+	sudo $(TARGET) 
 
 pre-build:
 	@echo '****************'

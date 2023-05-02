@@ -1,18 +1,29 @@
-/*
+/*!
+	@file TM1638plus_RPI/examples/src/TEST_Model2/main.cpp
+	@author Gavin Lyons
+	@brief A demo file library for TM1638 module Works on Model 2
+	Carries out series of tests demonstrating arduino library TM1638plus.
 	Project Name: TM1638plus_RPI
-	File: main.cpp
-	Description: demo file library for "model 2" TM1638 module(16 KEY 16 pushbuutons).
-	Carries out series of tests demonstrating raspberry pi library TM1638plus.
-	
-	NOTE: The tests will increment automatically with exception of 8 & 9, 
+	URL: https://github.com/gavinlyonsrepo/TM1638plus_RPI
+	@note
+		-# Test 0 reset test
+		-# Test 1 decimal and float numbers
+		-# Test 2 Hexadecimal number
+		-# Test 3a 3b & 3C using DisplaySegments method
+		-# Test 4 strings
+		-# Test 5 ASCIItoSegment method 
+		-# Test 6  Brightness and reset
+		-# Test 7 scroll text
+		-# Test 8 Buttons , ReadKey16() returns byte 1-16 decimal, press S16 to goto test9
+		-# Test 9 Buttons , Readkey16Two() alternate buttons function. 
+		 
+	The tests will increment automatically with exception of 8 & 9, 
 	Pressing Switch 16 during test 8 moves to test 9 and pressing it during test 9
 	ends program.
-	
-	Created: June 2021
-	URL: https://github.com/gavinlyonsrepo/TM1638plus_RPI
 */
 
-#include <TM1638plus_Model2.h>
+
+#include <TM1638plus_Model2.hpp>
 #include <time.h>
 
 // GPIO I/O pins on the RPI connected to strobe, clock, data, pick on any I/O pin you want.
@@ -45,7 +56,7 @@ static uint64_t RPI_Millis( void );
 int main(int argc, char **argv) 
 {
 
-	printf("Test Begin\r\n");
+	printf("Test Begin :: Model 2 :: TM1638plus_RPI\r\n");
 	if(!bcm2835_init()) {return -1;}
 	
 	tm.displayBegin(); // Init the module
@@ -74,47 +85,50 @@ int main(int argc, char **argv)
 // ************** Function Space ***********
 void Test1(void)
 {
+	printf("Test 1: Numbers \r\n");
 	// Test 1a decimal number right aligned
-	tm.DisplayDecNum(250, 1 << 2, TMAlignTextRight); // "     2.50"
+	tm.DisplayDecNum(250, 1 << 2, tm.TMAlignTextRight); // "     2.50"
 	bcm2835_delay(myTestDelay);
 	// Test 1b decimal number left aligned
-	tm.DisplayDecNum(99791, 1 << 4, TMAlignTextLeft); // "9979.1   "
+	tm.DisplayDecNum(99791, 1 << 4, tm.TMAlignTextLeft); // "9979.1   "
 	bcm2835_delay(myTestDelay);
 	// Test 1c decimal number leading zeros
-	tm.DisplayDecNum(2882, 0 , TMAlignTextZeros);  // 00002882
+	tm.DisplayDecNum(2882, 0 , tm.TMAlignTextZeros);  // 00002882
 	bcm2835_delay(myTestDelay);
 	
 	// Test 1d negative number 
-	tm.DisplayDecNum(-33, 0 , TMAlignTextLeft); // "-33        "
+	tm.DisplayDecNum(-33, 0 , tm.TMAlignTextLeft); // "-33        "
 	bcm2835_delay(myTestDelay);
 	
 	// Test 1e  decimal numbers with the DisplayDecNumNibble right aligned
-	tm.DisplayDecNumNibble(213 , 78, 0 , TMAlignTextRight); // " 213  78"
+	tm.DisplayDecNumNibble(213 , 78, 0 , tm.TMAlignTextRight); // " 213  78"
 	bcm2835_delay(myTestDelay);
 	// Test 1f  decimal numbers with the DisplayDecNumNibble left aligned
-	tm.DisplayDecNumNibble(2 , 95, 1<<3 , TMAlignTextLeft); // "2   9.5  "
+	tm.DisplayDecNumNibble(2 , 95, 1<<3 , tm.TMAlignTextLeft); // "2   9.5  "
 	bcm2835_delay(myTestDelay);
 	// Test 1g  decimal numbers with the DisplayDecNumNibble leading zeros
-	tm.DisplayDecNumNibble(134 , 47, 1<<1 , TMAlignTextZeros); // "0134004.7"
+	tm.DisplayDecNumNibble(134 , 47, 1<<1 , tm.TMAlignTextZeros); // "0134004.7"
 	bcm2835_delay(myTestDelay);
 }
 
 void Test2(void)
 {
+	printf("Test 2: Hexadecimal numbers \r\n");
 	// Test 2a Hexadecimal number right aligned
-	tm.DisplayHexNum(0x00FF, 0x056E, 0x00, TMAlignTextRight); //"  FF 56E"
+	tm.DisplayHexNum(0x00FF, 0x056E, 0x00, tm.TMAlignTextRight); //"  FF 56E"
 	bcm2835_delay(myTestDelay);
 	// Test 2a Hexadecimal number left aligned
-	tm.DisplayHexNum(0x0ABC, 0x000F, 0x00, TMAlignTextLeft); // "ABC F   "
+	tm.DisplayHexNum(0x0ABC, 0x000F, 0x00, tm.TMAlignTextLeft); // "ABC F   "
 	bcm2835_delay(myTestDelay);
 	// Test 2a Hexadecimal number leading zeros
-	tm.DisplayHexNum(0x0EE1, 0x00F4, 1 << 4, TMAlignTextZeros); // "0EE1.00F4"
+	tm.DisplayHexNum(0x0EE1, 0x00F4, 1 << 4, tm.TMAlignTextZeros); // "0EE1.00F4"
 	bcm2835_delay(myTestDelay);
 }
 
 void Test3(void)
 {
 	// Test 3 manually set segments abcdefg(dp) = 01234567
+	printf("Test 3: DisplaySegments method \r\n");
 	// display a one in position one "       1"
 	tm.DisplaySegments(0, 0x00); //a
 	tm.DisplaySegments(1, 0x01); //b, for b turn on digit one only
@@ -156,6 +170,7 @@ void Test3(void)
 void Test4(void)
 {
 	// Test 4 strings
+	printf("Test 4: Strings \r\n");
 	tm.DisplayStr("helloYOU", 1); // "helloYOU."
 	bcm2835_delay(myTestDelay);
 	tm.DisplayStr("      Hi", 0x08); // "     . Hi"
@@ -164,12 +179,13 @@ void Test4(void)
 	bcm2835_delay(myTestDelay);
 	tm.DisplayStr(" helloU2", 0); // " helloU2"
 	bcm2835_delay(myTestDelay);
-	tm.DisplayStr("hello", 0);  // "hello   "
+	tm.DisplayStr("string", 0);  // "string   "
 	bcm2835_delay(myTestDelay);
 }
 
 void Test5(void)
 {
+	printf("Test 5: ASCII to segments method\r\n");
 	// Test 5 ASCII to segments takes an array of bytes and displays them
 	// without ref to the ASCII font table direct data to digits to displays 3F 3F 3F 6D 3F 3F 3F 6D = 00050005
 	// gfedcba = 3F for zero https://en.wikipedia.org/wiki/Seven-segment_display
@@ -184,6 +200,7 @@ void Test5(void)
 void Test6(void)
 {
 	// Test 6  Brightness and reset
+	printf("Test 6: Brightness Test\r\n");
 	for (uint8_t brightness = 0; brightness < 8; brightness++)
 	{
 		tm.brightness(brightness);
@@ -198,6 +215,7 @@ void Test6(void)
 // Just one possible method to scroll text there are many others.
 void Test7(void)
 {
+	printf("Test 7: Scroll Test\r\n");
 	char textScroll[17] = " Hello world 123";
 	unsigned long previousMillis_display = 0;  // will store last time display was updated
 	const long interval_display = 1000;            //   interval at which to update display (milliseconds)
@@ -224,6 +242,7 @@ void Test7(void)
 
 void Test8(void)
 {
+	printf("Test 8: Buttons :: Press S16 to go to test 9 \r\n");
 	unsigned char buttons;
 	while(1)
 	{
@@ -231,7 +250,7 @@ void Test8(void)
 		// returns 0-16 , 0 for nothing pressed.
 		// NOTE: pressing  S16 will move to test 9 
 		buttons = tm.ReadKey16();
-		tm.DisplayDecNum(buttons, 0 , TMAlignTextRight); 
+		tm.DisplayDecNum(buttons, 0 , tm.TMAlignTextRight); 
 		bcm2835_delay( myTestDelay2);
 		if (buttons == 16)
 		{
@@ -245,6 +264,7 @@ void Test8(void)
 //returns word with binary value of switch. S16 = Bit 15 , S15 = bit 14 etc
 void Test9(void)
 {
+	printf("Test 9: Buttons :: Press S16 to quit\r\n");
 	uint16_t buttons=0;
 	tm.DisplayStr("buttons2", 0);
 	bcm2835_delay( myTestDelay2);
@@ -261,7 +281,7 @@ void Test9(void)
 		// Can be used to detect multi key presses , see Notes section in readme.
 		// For issues related to display when pressing multi keys together. 
 		buttons = tm.ReadKey16Two();
-		tm.DisplayHexNum(0x0000, buttons, 0x00, TMAlignTextZeros); 
+		tm.DisplayHexNum(0x0000, buttons, 0x00, tm.TMAlignTextZeros); 
 		if (buttons == 0x8000)
 		{
 			//pressing 16 to quit
