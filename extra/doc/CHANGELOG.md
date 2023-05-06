@@ -8,5 +8,5 @@
 
 * version 2.0.0 April 2023
 	* Optimizations  + refactoring
-	* Updated to March Ardui0 original Arduino port, v2.0.0
-	* Added Doxygen style commenst to allow Doxygen software to generate an HTML API.
+	* Updated to match original Arduino port, v 2.0.0
+	* Added "Doxygen" style comments to allow "Doxygen" software to generate an HTML API.
