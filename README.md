@@ -3,19 +3,20 @@
 
 # TM1638plus RPI
 
-Table of contents
----------------------------
+## Table of contents
 
   * [Overview](#overview)
   * [Installation](#installation)
   * [Test](#test)
   * [Software](#software)
   * [Hardware](#hardware)
-  * [Notes](#notes)
+  * [Notes and Issues](#notes-and-issues)
+	* [Compilation problems](#compilation-problems)
+	* [Comms delay](#comms-delay)
 
 
-Overview
---------------------------------------------
+## Overview
+
 * Name: TM1638plus_RPI
 * Author: Gavin Lyons.
 
@@ -24,15 +25,14 @@ Overview
 A Raspberry pi library to display data on a 8-digit TM1638 seven segment module.
 Dynamic install-able system level Raspberry Pi C++ library.
 
-* Developed on
+* Development Tool Chain
 	1. Raspberry PI 3 model b,
 	2. C++ , complier g++ (Raspbian 8.3.0-6+rpi1) 8.3.0
-	3. Raspbian 10 buster OS , armv7l Linux 5.10.103-v7+
+	3. Raspbian 10 buster OS , armv7l Linux 5.10.103-v7+, 32 bit 
 	4. bcm2835 Library 1.68 (Dependency: used for GPIO control and delays)
 
 
-Installation
-------------------------------
+## Installation
 
 1. Install the dependency bcm2835 Library if not installed
 	* The bcm2835 library is a dependency and provides delays and GPIO control.
@@ -54,8 +54,7 @@ cd TM1638plus_RPI-2.0
 sudo make
 ```
 
-Test
---------------------------------
+## Test
 
 Wire up your Display.
 Next step is to test LED display and the just installed library with an example file.
@@ -87,8 +86,8 @@ cd examples/
 make
 make run
 ```
-Software
----------------------------------
+
+## Software
 
 This library is a port of my Arduino Library. There at link below you will find the full documentation including the  Application programming interface(API), which is similar to RPI version except ::
  
@@ -102,8 +101,7 @@ This library is a port of my Arduino Library. There at link below you will find 
 
 [ Arduino library github Link ](https://github.com/gavinlyonsrepo/TM1638plus)
 
-Hardware
-----------------------
+## Hardware
 
 Connections to RPI:
 
@@ -128,10 +126,18 @@ Pictured at from left to right.
 
 ![ module pics ](https://github.com/gavinlyonsrepo/TM1638plus/blob/master/extra/images/tm16383.jpg)
 
-Notes
-------------------------------
+## Notes and Issues
 
-Note A : TM_Comm_Delay Communications optional delay
+### Compilation problems
 
+Note the tool chain used in overview section, If you have trouble compiling on other 
+platforms or OS. For example 64-bit OS, user may need to remove or edit
+some of the CCFLAGS in root directory Makefile to allow for Compilation, if you see them throwing errors
+See [pull request on SSD1306 project](https://github.com/gavinlyonsrepo/SSD1306_OLED_RPI/pull/2) for details.
+Will upgrade in future release.
+
+### Comms delay
+
+Communications optional delay.
 It may be necessary to adjust the constant  _TM_CommDelay in the TM1638plus_common.h file. It is Microsecond delay used in communications clocking, it is currently set to 1, 
 It can be set to 0 or higher. On a different CPU Frequency to one tested, it may be necessary to increase/decrease this.
