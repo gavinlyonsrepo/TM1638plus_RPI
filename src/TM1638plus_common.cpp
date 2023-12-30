@@ -125,3 +125,21 @@ void TM1638plus_common::HighFreqshiftOut(uint8_t dataPin, uint8_t clockPin, uint
 	}
 }
 
+/*!
+	@brief get the library number
+	@return The library number 210 = 2.1.0
+*/
+uint16_t  TM1638plus_common::libraryVersionNumberGet(void) {return _TMLibVerNum;}
+
+/*!
+	@brief get the TM comm delay.
+	@return The TM comm delay in uS
+*/
+uint16_t TM1638plus_common::TMCommDelayGet(void){return  _TMCommDelay;}
+
+/*!
+	@brief set the TM comm delay.
+	@param CommDelay The TM comm delay in uS
+*/
+void TM1638plus_common::TMCommDelayset(uint16_t CommDelay) {_TMCommDelay = CommDelay;}
+

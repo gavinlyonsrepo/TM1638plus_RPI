@@ -20,12 +20,18 @@
 // Constructor object (GPIO STB , GPIO CLOCK , GPIO DIO, )
 TM1638plus_Model1 tm(STROBE_TM, CLOCK_TM , DIO_TM);
 
-
 int main(int argc, char **argv) 
 {
 	printf("Test Begin :: Model 1 :: TM1638plus_RPI\r\n");
-	if(!bcm2835_init()) {return -1;}
-	
+	printf("TM1638plus_RPI library version number :: %u\r\n", tm.libraryVersionNumberGet());
+	if(!bcm2835_init())
+	{
+		printf("bcm2835 library failed to init, Run as root\r\n");
+		return -1;
+	}else
+	{
+		printf("bcm2835 library Version Number :%u\r\n", bcm2835_version());
+	}
 	tm.displayBegin(); 
 	tm.displayText("helowrld");
 	bcm2835_delay(5000);

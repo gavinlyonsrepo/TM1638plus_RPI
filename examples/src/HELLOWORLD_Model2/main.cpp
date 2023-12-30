@@ -24,7 +24,15 @@ TM1638plus_Model2 tm(STROBE_TM, CLOCK_TM , DIO_TM, swap_nibbles);
 int main(int argc, char **argv) 
 {
 	printf("Test Begin :: Model 2 :: TM1638plus_RPI\r\n");
-	if(!bcm2835_init()) {return -1;}
+	printf("TM1638plus_RPI library version number :: %u\r\n", tm.libraryVersionNumberGet());
+	if(!bcm2835_init())
+	{
+		printf("bcm2835 library failed to init, Run as root\r\n");
+		return -1;
+	}else
+	{
+		printf("bcm2835 library Version Number :%u\r\n", bcm2835_version());
+	}
 	
 	tm.displayBegin();
 	tm.DisplayStr("helowrld", 0);  // Display "helowrld" in 7 segments with 0 decimal points set.

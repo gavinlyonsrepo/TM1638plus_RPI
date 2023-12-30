@@ -11,8 +11,6 @@
   * [Software](#software)
   * [Hardware](#hardware)
   * [Notes and Issues](#notes-and-issues)
-	* [Compilation problems](#compilation-problems)
-	* [Comms delay](#comms-delay)
 
 
 ## Overview
@@ -25,11 +23,12 @@
 A Raspberry pi library to display data on a 8-digit TM1638 seven segment module.
 Dynamic install-able system level Raspberry Pi C++ library.
 
-* Development Tool Chain
-	1. Raspberry PI 3 model b,
-	2. C++ , complier g++ (Raspbian 8.3.0-6+rpi1) 8.3.0
-	3. Raspbian 10 buster OS , armv7l Linux 5.10.103-v7+, 32 bit 
-	4. bcm2835 Library 1.68 (Dependency: used for GPIO control and delays)
+* Development Tool chain. 
+	1. Raspberry PI 3 model b
+	2. C++, g++ (Debian 12.2.0) 
+	3. Raspbian , Debian 12 bookworm OS, , 64 bit.
+	4. kernel : aarch64 Linux 6.1.0-rpi7-rpi-v8
+	5. bcm2835 Library 1.73 dependency. Provides low level I2C bus, delays and GPIO control.
 
 
 ## Installation
@@ -43,15 +42,16 @@ Dynamic install-able system level Raspberry Pi C++ library.
 	* Run following command to download from github.
 
 ```sh
-curl -sL https://github.com/gavinlyonsrepo/TM1638plus_RPI/archive/2.0.tar.gz | tar xz
+curl -sL https://github.com/gavinlyonsrepo/TM1638plus_RPI/archive/2.1.tar.gz | tar xz
 ```
 
-4. Run "make" to run the makefile in base folder to install library, it will be
+3. Run "make" to run the makefile in base folder to install library, it will be
     installed to usr/lib and usr/include
 
 ```sh
-cd TM1638plus_RPI-2.0
-sudo make
+cd TM1638plus_RPI-2.1
+make
+sudo make install
 ```
 
 ## Test
@@ -78,8 +78,6 @@ Comment out the rest.
 Next enter the examples folder and run the makefile in THAT folder,
 This makefile builds the examples file using the just installed library.
 and creates a test exe file in "bin".
-Make run will use  "sudo" as the bcm2835
-requires root permissions by default [ see here for more details on that](http://www.airspayce.com/mikem/bcm2835/)
 
 ```sh
 cd examples/
@@ -100,6 +98,13 @@ This library is a port of my Arduino Library. There at link below you will find 
 7. Enumerators and constants are used instead of #defines
 
 [ Arduino library github Link ](https://github.com/gavinlyonsrepo/TM1638plus)
+
+### Comms delay
+
+Communications optional delay.
+It may be necessary to adjust the constant  TMCommDelay in the TM1638plus_common.h file. It is Microsecond delay used in communications clocking, it is currently set to 1, 
+It can be set to 0 or higher. On a different CPU Frequency to one tested, it may be necessary to increase/decrease this.
+The user can do this with the Getter method provided. TMCommDelayGet.
 
 ## Hardware
 
@@ -128,16 +133,4 @@ Pictured at from left to right.
 
 ## Notes and Issues
 
-### Compilation problems
 
-Note the tool chain used in overview section, If you have trouble compiling on other 
-platforms or OS. For example 64-bit OS, user may need to remove or edit
-some of the CCFLAGS in root directory Makefile to allow for Compilation, if you see them throwing errors
-See [pull request on SSD1306 project](https://github.com/gavinlyonsrepo/SSD1306_OLED_RPI/pull/2) for details.
-Will upgrade in future release.
-
-### Comms delay
-
-Communications optional delay.
-It may be necessary to adjust the constant  _TM_CommDelay in the TM1638plus_common.h file. It is Microsecond delay used in communications clocking, it is currently set to 1, 
-It can be set to 0 or higher. On a different CPU Frequency to one tested, it may be necessary to increase/decrease this.

@@ -55,8 +55,11 @@ public:
 	TM1638plus_common(uint8_t strobe, uint8_t clock, uint8_t data);
 
 	void reset(void);
-	void displayBegin();
+	void displayBegin(void);
 	void brightness(uint8_t brightness);
+	uint16_t libraryVersionNumberGet(void);
+	uint16_t TMCommDelayGet(void);
+	void TMCommDelayset(uint16_t);
 
 protected:
 	void sendCommand(uint8_t value);
@@ -72,7 +75,8 @@ protected:
 	const unsigned char * pFontSevenSegptr = SevenSeg; /**<  Pointer to the seven segment font data table */
 
 private:
-	const uint16_t _TMCommDelay = 1; /**<  uS delay used in communications , User adjust */
+	const uint16_t _TMLibVerNum = 210; /**< Library version number 210 = 2.1.0*/
+	uint16_t _TMCommDelay = 1; /**<  uS delay used in communications , User adjust */
 	const uint8_t _TMDefaultBrightness = 0x02; /**<  can be 0x00 to 0x07 , User adjust */
 	
 	/*! font , map of ASCII values/table to 7-segment, offset to position 32.  */
