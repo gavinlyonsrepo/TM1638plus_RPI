@@ -10,7 +10,7 @@
   * [Test](#test)
   * [Software](#software)
   * [Hardware](#hardware)
-  * [Notes and Issues](#notes-and-issues)
+  * [See Also](see-also)
 
 
 ## Overview
@@ -131,6 +131,8 @@ Pictured at from left to right.
 
 ![ module pics ](https://github.com/gavinlyonsrepo/TM1638plus/blob/master/extra/images/tm16383.jpg)
 
-## Notes and Issues
+## See Also
+
+[Combined Display library 'Display_Lib_RPI'](https://github.com/gavinlyonsrepo/Display_Lib_RPI)
 
 
