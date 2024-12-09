@@ -6,11 +6,12 @@
 ## Table of contents
 
   * [Overview](#overview)
+  * [See Also](#see-also)
   * [Installation](#installation)
   * [Test](#test)
   * [Software](#software)
   * [Hardware](#hardware)
-  * [See Also](see-also)
+  
 
 
 ## Overview
@@ -30,6 +31,10 @@ Dynamic install-able system level Raspberry Pi C++ library.
 	4. kernel : aarch64 Linux 6.1.0-rpi7-rpi-v8
 	5. bcm2835 Library 1.73 dependency. Provides low level I2C bus, delays and GPIO control.
 
+## See Also
+
+The TM1638plus_RPI library has been amalgamated into my combined display library ['Display_Lib_RPI.'](https://github.com/gavinlyonsrepo/Display_Lib_RPI)
+This new library is under active development and should work on any Linux based single board computer.
 
 ## Installation
 
@@ -131,8 +136,5 @@ Pictured at from left to right.
 
 ![ module pics ](https://github.com/gavinlyonsrepo/TM1638plus/blob/master/extra/images/tm16383.jpg)
 
-## See Also
-
-[Combined Display library 'Display_Lib_RPI'](https://github.com/gavinlyonsrepo/Display_Lib_RPI)
 
 
